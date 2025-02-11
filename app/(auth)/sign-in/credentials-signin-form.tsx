@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { signInDefaultFormValues } from "@/lib/constants";
+import { signInDefaultValues } from "@/lib/constants";
 import Link from "next/link";
 import { signInWithCredentials } from "@/lib/actions/user.actions";
 import { useFormStatus } from "react-dom";
@@ -41,7 +41,7 @@ const CredentialsSigninForm = () => {
             type="email"
             required
             autoComplete="email"
-            defaultValue={signInDefaultFormValues.email}
+            defaultValue={signInDefaultValues.email}
           />
         </div>
         <div>
@@ -52,7 +52,7 @@ const CredentialsSigninForm = () => {
             type="password"
             required
             autoComplete="password"
-            defaultValue={signInDefaultFormValues.password}
+            defaultValue={signInDefaultValues.password}
           />
         </div>
         <div>
