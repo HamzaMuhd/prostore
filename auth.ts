@@ -81,8 +81,8 @@ export const config = {
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
     authorized({ request, auth }): any {
-      if (!request.cookies.get("sessionCardId")) {
-        const sessionCardId = crypto.randomUUID();
+      if (!request.cookies.get("sessionCartId")) {
+        const sessionCartId = crypto.randomUUID();
 
         const newRequestHeaders = new Headers(request.headers);
 
@@ -92,7 +92,7 @@ export const config = {
           },
         });
 
-        response.cookies.set("sessionCardId", sessionCardId);
+        response.cookies.set("sessionCartId", sessionCartId);
 
         return response;
       } else {
