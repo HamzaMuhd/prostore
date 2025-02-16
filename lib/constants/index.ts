@@ -20,9 +20,9 @@ export const signUpDefaultValues = {
 };
 
 export const shippingAddressDefaultValues = {
-  fullName: "Hamza Muhd",
-  streetAddress: "369 Dukawuyya",
-  city: "Kano",
-  postalCode: "700321",
-  country: "Nigeria",
+  fullName: "",
+  streetAddress: "",
+  city: "",
+  postalCode: "",
+  country: "",
 };
