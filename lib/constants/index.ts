@@ -18,3 +18,11 @@ export const signUpDefaultValues = {
   password: "",
   confirmPassword: "",
 };
+
+export const shippingAddressDefaultValues = {
+  fullname: "Hamza Muhd",
+  streetAddress: "369 Dukawuyya",
+  city: "Kano",
+  postalCode: "700321",
+  country: "Nigeria",
+};
