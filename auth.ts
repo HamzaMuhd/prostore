@@ -3,7 +3,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "@/db/prisma";
 import CredentialsProvider from "next-auth/providers/credentials";
 import type { NextAuthConfig } from "next-auth";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { compare } from "./lib/encrypt";
@@ -63,7 +63,7 @@ export const config = {
       }
       return session;
     },
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async jwt({ token, user, trigger, session }: any) {
       if (user) {
         token.id = user.id;
@@ -77,6 +77,30 @@ export const config = {
             data: { name: token.name },
           });
         }
+        if (trigger === "signIn" || trigger === "signUp") {
+          const cookiesObject = await cookies();
+          const sessionCartId = cookiesObject.get("sessionCartId")?.value;
+
+          if (sessionCartId) {
+            const sessionCart = await prisma.cart.findFirst({
+              where: { sessionCartId },
+            });
+
+            if (sessionCart) {
+              await prisma.cart.deleteMany({
+                where: { userId: user.id },
+              });
+
+              await prisma.cart.update({
+                where: { id: sessionCart.id },
+                data: { userId: user.id },
+              });
+            }
+          }
+        }
+      }
+      if (session?.user.name && trigger === "update") {
+        token.name = session.user.name;
       }
       return token;
     },
