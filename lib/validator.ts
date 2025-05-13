@@ -20,10 +20,17 @@ export const insertProductSchema = z.object({
   description: z.string().min(3, "Description must be at least 3 characters"),
   stock: z.coerce.number(),
   images: z.array(z.string()).min(1, "Product must have at least one image"),
-  isFeatured: z.boolean(),
-  banner: z.string().nullable(),
+  // isFeatured: z.boolean(),
+  // banner: z.string().nullable(),
   price: currency,
 });
+
+// Schema for updating products
+
+export const updateProductSchema = insertProductSchema.extend({
+  id: z.string().min(1, "Product id is required"),
+});
+
 export const signInFormSchema = z.object({
   email: z.string().email("Invalid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
