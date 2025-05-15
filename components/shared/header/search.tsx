@@ -1,8 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Select, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
 import { getAllCategories } from "@/lib/actions/product.actions";
-import { SelectContent, SelectItem } from "@radix-ui/react-select";
 import { SearchIcon } from "lucide-react";
 
 const Search = async () => {
