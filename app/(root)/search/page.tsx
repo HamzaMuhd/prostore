@@ -61,31 +61,30 @@ const SearchPage = async (props: {
     <div className="grid md:grid-cols-5 md:gap-5">
       <div className="filter-links">
         {/* Category Links */}
-        <div className="text-xl mb-2 mt-3">
-          <div>
-            <ul className="space-y-1">
-              <li>
+        <div className="text-xl mb-2 mt-3">Department</div>
+        <div>
+          <ul className="space-y-1">
+            <li>
+              <Link
+                className={`${
+                  (category === "all" || category === "") && "font-bold"
+                }`}
+                href={getFilterUrl({ c: "all" })}
+              >
+                Any
+              </Link>
+            </li>
+            {categories.map((x) => (
+              <li key={x.category}>
                 <Link
-                  className={`${
-                    (category === "all" || category === "") && "font-bold"
-                  }`}
-                  href={getFilterUrl({ c: "all" })}
+                  className={`${category === x.category && "font-bold"}`}
+                  href={getFilterUrl({ c: x.category })}
                 >
-                  Any
+                  {x.category}
                 </Link>
               </li>
-              {categories.map((x) => (
-                <li key={x.category}>
-                  <Link
-                    className={`${category === x.category && "font-bold"}`}
-                    href={getFilterUrl({ c: x.category })}
-                  >
-                    {x.category}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+            ))}
+          </ul>
         </div>
       </div>
       <div className="md:col-span-4 space-y-4">
