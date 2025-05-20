@@ -234,20 +234,20 @@ export async function updateOrderToPaid({
   });
 
   //Get updated order after transaction
-  const updateOrder = await prisma.order.findFirst({
+  const updatedOrder = await prisma.order.findFirst({
     include: {
       orderitems: true,
       user: { select: { name: true, email: true } },
     },
   });
 
-  if (!updateOrder) throw new Error("Order not found");
+  if (!updatedOrder) throw new Error("Order not found");
 
   sendPurchaseReceipt({
     order: {
-      ...updateOrder,
-      shippingAddress: updateOrder.shippingAddress as ShippingAddress,
-      paymentResult: updateOrder.paymentResult as PaymentResult,
+      ...updatedOrder,
+      shippingAddress: updatedOrder.shippingAddress as ShippingAddress,
+      paymentResult: updatedOrder.paymentResult as PaymentResult,
     },
   });
 }
