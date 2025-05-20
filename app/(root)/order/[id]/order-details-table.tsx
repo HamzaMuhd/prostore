@@ -29,6 +29,7 @@ import {
 import { useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import StripePayment from "./stripe-payment";
+import PaystackPayment from "./paystack";
 
 const OrderDetailsTable = ({
   order,
@@ -249,6 +250,15 @@ const OrderDetailsTable = ({
                   priceInCents={Number(order.totalPrice) * 100}
                   orderId={order.id}
                   clientSecret={stripeClientSecret}
+                />
+              )}
+
+              {/*Paystack Payment */}
+              {!isPaid && paymentMethod === "Paystack" && (
+                <PaystackPayment
+                  email={order.user.email}
+                  amount={Number(order.totalPrice) * 100}
+                  orderId={order.id}
                 />
               )}
               {/*Cash On Delivery */}
