@@ -187,7 +187,7 @@ const OrderDetailsTable = ({
                     <TableRow key={item.slug}>
                       <TableCell>
                         <Link
-                          href={`/product/{items.slug}`}
+                          href={`/product/${item.slug}`}
                           className="flex items-center"
                         >
                           <Image

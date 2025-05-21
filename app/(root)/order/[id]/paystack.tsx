@@ -3,14 +3,6 @@
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import PaystackPop from "@paystack/inline-js";
-
-interface PaystackOptions {
-  key: string;
-  email: string;
-  amount: number;
-  reference: string;
-  callback: () => void;
-}
 import { Button } from "@/components/ui/button";
 
 export default function PaystackPayment({
@@ -19,7 +11,7 @@ export default function PaystackPayment({
   orderId,
 }: {
   email: string;
-  amount: number; // Amount in Kobo
+  amount: number;
   orderId: string;
 }) {
   const { toast } = useToast();
@@ -47,10 +39,16 @@ export default function PaystackPayment({
         email,
         amount,
         reference: orderId,
-        callback: () => {
+        onSuccess: () => {
           window.location.href = `/order/${orderId}/paystack-payment-success`;
         },
-      } as PaystackOptions);
+        onCancel: () => {
+          toast({ description: "Payment cancelled", variant: "destructive" });
+        },
+        onError: (error) => {
+          toast({ description: error.message, variant: "destructive" });
+        },
+      });
     } catch (err) {
       const message =
         err instanceof Error ? err.message : "Failed to initialize payment";
