@@ -29,7 +29,6 @@ export async function POST(req: NextRequest) {
       }),
     }
   );
-
   const data = await response.json();
 
   if (!data.status) {
