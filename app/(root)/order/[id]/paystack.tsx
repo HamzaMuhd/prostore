@@ -2,6 +2,15 @@
 
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
+import PaystackPop from "@paystack/inline-js";
+
+interface PaystackOptions {
+  key: string;
+  email: string;
+  amount: number;
+  reference: string;
+  callback: () => void;
+}
 import { Button } from "@/components/ui/button";
 
 export default function PaystackPayment({
@@ -10,7 +19,7 @@ export default function PaystackPayment({
   orderId,
 }: {
   email: string;
-  amount: number;
+  amount: number; // Amount in Kobo
   orderId: string;
 }) {
   const { toast } = useToast();
@@ -27,20 +36,24 @@ export default function PaystackPayment({
 
       const data = await res.json();
 
-      if (!data.success || !data.authorization_url) {
-        toast({
-          description: data.message || "Paystack init failed",
-          variant: "destructive",
-        });
+      if (!data.success) {
+        toast({ description: data.message, variant: "destructive" });
         return;
       }
 
-      window.location.href = data.authorization_url;
+      const popup = new PaystackPop();
+      popup.newTransaction({
+        key: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY!,
+        email,
+        amount,
+        reference: orderId,
+        callback: () => {
+          window.location.href = `/order/${orderId}/paystack-payment-success`;
+        },
+      } as PaystackOptions);
     } catch (err) {
       const message =
-        err instanceof Error
-          ? err.message
-          : "Something went wrong with Paystack";
+        err instanceof Error ? err.message : "Failed to initialize payment";
       toast({ description: message, variant: "destructive" });
     } finally {
       setIsLoading(false);
@@ -49,7 +62,7 @@ export default function PaystackPayment({
 
   return (
     <Button onClick={handlePay} disabled={isLoading}>
-      {isLoading ? "Redirecting..." : "Pay with Paystack"}
+      {isLoading ? "Initializing..." : "Pay with Paystack"}
     </Button>
   );
 }

@@ -1,5 +1,4 @@
 import { SERVER_URL } from "@/lib/constants";
-import { formatError } from "@/lib/utils";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -13,10 +12,10 @@ export async function POST(req: NextRequest) {
   }
 
   const amountInKobo = Math.round(amount);
-  const reference = `${orderId}-${Date.now()}`;
 
-  try {
-    const res = await fetch("https://api.paystack.co/transaction/initialize", {
+  const response = await fetch(
+    "https://api.paystack.co/transaction/initialize",
+    {
       method: "POST",
       headers: {
         Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
@@ -25,29 +24,23 @@ export async function POST(req: NextRequest) {
       body: JSON.stringify({
         email,
         amount: amountInKobo,
-        reference,
+        reference: orderId,
         callback_url: `${SERVER_URL}/order/${orderId}/paystack-payment-success`,
         metadata: { orderId },
       }),
-    });
-
-    const data = await res.json();
-
-    if (!data.status || !data.data.authorization_url) {
-      return NextResponse.json(
-        { success: false, message: data.message || "Paystack API failed" },
-        { status: 400 }
-      );
     }
+  );
+  const data = await response.json();
 
-    return NextResponse.json({
-      success: true,
-      authorization_url: data.data.authorization_url,
-    });
-  } catch (error) {
+  if (!data.status) {
     return NextResponse.json(
-      { success: false, message: formatError(error) },
-      { status: 500 }
+      { success: false, message: data.message },
+      { status: 400 }
     );
   }
+
+  return NextResponse.json({
+    success: true,
+    access_code: data.data.access_code,
+  });
 }
