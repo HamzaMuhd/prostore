@@ -10,7 +10,6 @@ export async function POST(req: NextRequest) {
       { status: 400 }
     );
   }
-
   const reference = `${orderId}-${Date.now()}`;
   const amountInKobo = Math.round(amount);
 
