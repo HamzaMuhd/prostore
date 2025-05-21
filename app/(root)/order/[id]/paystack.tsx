@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
-import PaystackPop from "@paystack/inline-js";
 import { Button } from "@/components/ui/button";
 
 export default function PaystackPayment({
@@ -28,16 +27,20 @@ export default function PaystackPayment({
 
       const data = await res.json();
 
-      if (!data.success) {
-        toast({ description: data.message, variant: "destructive" });
+      if (!data.success || !data.authorization_url) {
+        toast({
+          description: data.message || "Paystack init failed",
+          variant: "destructive",
+        });
         return;
       }
 
-      const popup = new PaystackPop();
-      popup.resumeTransaction(data.access_code);
+      window.location.href = data.authorization_url;
     } catch (err) {
       const message =
-        err instanceof Error ? err.message : "Failed to initialize payment";
+        err instanceof Error
+          ? err.message
+          : "Something went wrong with Paystack";
       toast({ description: message, variant: "destructive" });
     } finally {
       setIsLoading(false);
@@ -46,7 +49,7 @@ export default function PaystackPayment({
 
   return (
     <Button onClick={handlePay} disabled={isLoading}>
-      {isLoading ? "Initializing..." : "Pay with Paystack"}
+      {isLoading ? "Redirecting..." : "Pay with Paystack"}
     </Button>
   );
 }

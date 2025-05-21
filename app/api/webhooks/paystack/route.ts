@@ -1,17 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
-import { updateOrderToPaid } from "@/lib/actions/order.actions";
 import crypto from "crypto";
+import { updateOrderToPaid } from "@/lib/actions/order.actions";
 
 export async function POST(req: NextRequest) {
   const rawBody = await req.text();
-  const signature = req.headers.get("x-paystack-signature") as string;
+  const signature = req.headers.get("x-paystack-signature") ?? "";
 
-  const hash = crypto
+  const expectedHash = crypto
     .createHmac("sha512", process.env.PAYSTACK_SECRET_KEY!)
     .update(rawBody)
     .digest("hex");
 
-  if (signature !== hash) {
+  if (signature !== expectedHash) {
     return NextResponse.json({ message: "unauthorized" }, { status: 401 });
   }
 
@@ -30,8 +30,8 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    return NextResponse.json({ message: "updateOrderToPaid was successful" });
+    return NextResponse.json({ message: "Order marked as paid" });
   }
 
-  return NextResponse.json({ message: "event is not charge.success" });
+  return NextResponse.json({ message: "Unhandled event" });
 }
