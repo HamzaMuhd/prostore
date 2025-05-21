@@ -42,5 +42,6 @@ export async function POST(req: NextRequest) {
   return NextResponse.json({
     success: true,
     access_code: data.data.access_code,
+    reference,
   });
 }

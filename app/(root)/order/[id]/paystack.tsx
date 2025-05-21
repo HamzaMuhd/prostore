@@ -27,6 +27,7 @@ export default function PaystackPayment({
       });
 
       const data = await res.json();
+      const reference = data.reference;
 
       if (!data.success) {
         toast({ description: data.message, variant: "destructive" });
@@ -38,7 +39,7 @@ export default function PaystackPayment({
         key: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY!,
         email,
         amount,
-        reference: orderId,
+        reference,
         onSuccess: () => {
           window.location.href = `/order/${orderId}/paystack-payment-success`;
         },
