@@ -1,3 +1,4 @@
+import { SERVER_URL } from "@/lib/constants";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -24,7 +25,7 @@ export async function POST(req: NextRequest) {
         email,
         amount: amountInKobo,
         reference: orderId,
-        callback_url: `${process.env.NEXT_PUBLIC_SITE_URL}/order/${orderId}/paystack-payment-success`,
+        callback_url: `${SERVER_URL}/order/${orderId}/paystack-payment-success`,
         metadata: { orderId },
       }),
     }
