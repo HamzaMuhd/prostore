@@ -11,6 +11,7 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  const reference = `${orderId}-${Date.now()}`;
   const amountInKobo = Math.round(amount);
 
   const response = await fetch(
@@ -24,7 +25,7 @@ export async function POST(req: NextRequest) {
       body: JSON.stringify({
         email,
         amount: amountInKobo,
-        reference: orderId,
+        reference,
         callback_url: `${SERVER_URL}/order/${orderId}/paystack-payment-success`,
         metadata: { orderId },
       }),
